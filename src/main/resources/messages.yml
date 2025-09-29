@@ -1,0 +1,15 @@
+plugin:
+  enabled:
+    - "&eHa sido activado! &fVersion: %version%"
+    - "&eGracias por usar mi plugin ;)"
+    - "&eIt has been enabled! &fVersion: %version%"
+    - "&eThank you for using my plugin ;)"
+  disabled:
+    - "&eHa sido desactivado! &fVersion: %version%"
+    - "&eGracias por usar mi plugin ;)"
+    - "&eIt has been disabled! &fVersion: %version%"
+    - "&eThank you for using my plugin ;)"
+
+discord:
+  executed: "Comando ejecutado en Minecraft: &f%command%"
+  no_permission: "No tienes permiso para ejecutar este comando."
