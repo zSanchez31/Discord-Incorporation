@@ -1,5 +1,6 @@
 discord:
   token: "AQUI_TU_TOKEN"   # Token de tu bot
-  allowed-roles:           # Roles de Discord que pueden usar /mccommand
+  #Roles permitidos para hacer /mccomand, importante que sean los mismo que en discord
+  allowed-roles:
     - "Admin"
     - "Moderador"

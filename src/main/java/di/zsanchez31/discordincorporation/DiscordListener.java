@@ -21,7 +21,6 @@ public class DiscordListener extends ListenerAdapter {
                     .getConfig()
                     .getStringList("discord.allowed-roles");
 
-            // Usuario y roles en Discord
             Member member = event.getMember();
             if (member == null) {
                 event.reply("❌ Error: no se pudo obtener tu información de usuario.")
@@ -47,7 +46,6 @@ public class DiscordListener extends ListenerAdapter {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), comando);
             });
 
-            // Mensaje de confirmación
             String msg = DiscordIncorporation.getInstance().getMessagesConfig()
                     .getString("discord.executed", "✅ Ejecutado: %command%")
                     .replace("%command%", comando);

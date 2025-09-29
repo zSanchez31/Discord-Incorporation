@@ -5,6 +5,9 @@ import net.dv8tion.jda.api.JDABuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -35,7 +38,7 @@ public class DiscordIncorporation extends JavaPlugin {
 
         // Iniciar bot de Discord
         try {
-            String token = getConfig().getString("discord.token"); // Definido en config.yml
+            String token = getConfig().getString("discord.token");
             if (token == null || token.isEmpty()) {
                 getLogger().severe("❌ No se encontró el token de Discord en config.yml");
             } else {
@@ -64,6 +67,20 @@ public class DiscordIncorporation extends JavaPlugin {
             }
         };
         autoTask.runTaskTimer(this, 0L, 12000L);
+
+        // Registrar comando /reloaddiscord
+        this.getCommand("reloaddiscord").setExecutor(new CommandExecutor() {
+            @Override
+            public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+                if (!sender.hasPermission("discordincorporation.reload")) {
+                    sender.sendMessage(ChatColor.RED + "No tienes permiso para usar este comando.");
+                    return true;
+                }
+                reloadPlugin();
+                sender.sendMessage(ChatColor.GREEN + "Configuración recargada correctamente.");
+                return true;
+            }
+        });
 
         // Mensajes de encendido
         sendMessages("plugin.enabled");
@@ -102,5 +119,14 @@ public class DiscordIncorporation extends JavaPlugin {
         for (String msg : list) {
             sendConsoleMessage(msg);
         }
+    }
+
+    /**
+     * Recargar config.yml y messages.yml
+     */
+    public void reloadPlugin() {
+        reloadConfig();
+        messages = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "messages.yml"));
+        sendConsoleMessage("&eConfiguración recargada correctamente.");
     }
 }
