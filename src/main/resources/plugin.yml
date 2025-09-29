@@ -1,0 +1,6 @@
+name: DiscordIncorporation
+version: 1.0
+main: di.zsanchez31.discordincorporation.DiscordIncorporation
+api-version: 1.17
+author: TuNombre
+description: Plugin que conecta Minecraft con Discord
