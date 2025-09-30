@@ -1,6 +1,10 @@
-discord:
-  token: "AQUI_TU_TOKEN"   # Token de tu bot
-  #Roles permitidos para hacer /mccomand, importante que sean los mismo que en discord
-  allowed-roles:
-    - "Admin"
-    - "Moderador"
+# Discord bot token
+bot-token: "YOUR_BOT_TOKEN_HERE"
+
+# Roles allowed to execute commands from Discord
+allowed-roles:
+  - "Admin"
+  - "Moderator"
+
+# Channel where Minecraft ↔ Discord logs are sent
+log-channel-id: "123456789012345678"

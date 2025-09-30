@@ -2,11 +2,12 @@ name: DiscordIncorporation
 version: 1.0
 main: di.zsanchez31.discordincorporation.DiscordIncorporation
 api-version: 1.17
-author: TuNombre
-description: Plugin que conecta Minecraft con Discord
+
+author: YourName
+description: "Plugin to integrate Discord with Minecraft, bidirectional chat, remote commands, and logs."
 
 commands:
-  reloaddiscord:
-    description: Recarga la configuración del plugin
-    usage: /reloaddiscord
-    permission: discordincorporation.reload
+  discordinc:
+    description: "Main plugin command"
+    usage: "/discordinc reload"
+    aliases: [di, dic]

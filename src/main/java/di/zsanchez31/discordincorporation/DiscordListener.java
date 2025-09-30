@@ -1,56 +1,74 @@
 package di.zsanchez31.discordincorporation;
 
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DiscordListener extends ListenerAdapter {
 
     @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        if (event.getName().equals("mccommand")) {
-            String comando = event.getOption("comando").getAsString();
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (event.getAuthor().isBot()) return;
 
-            // Roles permitidos desde config.yml
-            List<String> allowedRoles = DiscordIncorporation.getInstance()
-                    .getConfig()
-                    .getStringList("discord.allowed-roles");
+        String logChannelId = DiscordIncorporation.getInstance().getLogChannelId();
+        if (event.getChannel().getId().equals(logChannelId)) {
+            String format = DiscordIncorporation.getInstance().getMessage("chat-discord-format")
+                    .replace("%user%", event.getAuthor().getName())
+                    .replace("%message%", event.getMessage().getContentDisplay());
+
+            Bukkit.getScheduler().runTask(DiscordIncorporation.getInstance(), () ->
+                    Bukkit.broadcastMessage(format.replace("&", "§"))
+            );
+        }
+    }
+
+    @Override
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        String name = event.getName();
+
+        if (name.equals("online")) {
+            List<String> onlinePlayers = Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+            String message = onlinePlayers.isEmpty() ? "No players online" :
+                    "Online players: " + String.join(", ", onlinePlayers);
+            event.reply(message).queue();
+        } else if (name.equals("cmd")) {
+            String comando = event.getOption("command").getAsString();
 
             Member member = event.getMember();
-            if (member == null) {
-                event.reply("❌ Error: no se pudo obtener tu información de usuario.")
-                        .setEphemeral(true).queue();
-                return;
-            }
+            List<String> allowedRoles = DiscordIncorporation.getInstance().getConfig().getStringList("allowed-roles");
 
-            List<String> userRoles = member.getRoles().stream()
-                    .map(Role::getName)
-                    .collect(Collectors.toList());
-
-            boolean permitido = userRoles.stream().anyMatch(allowedRoles::contains);
+            boolean permitido = member.getRoles().stream()
+                    .map(r -> r.getName())
+                    .anyMatch(allowedRoles::contains);
 
             if (!permitido) {
-                String noPermMsg = DiscordIncorporation.getInstance().getMessagesConfig()
-                        .getString("discord.no_permission", "❌ No tienes permiso para ejecutar este comando.");
-                event.reply(noPermMsg).setEphemeral(true).queue();
+                event.reply(DiscordIncorporation.getInstance().getMessage("no-permission").replace("&", "§"))
+                        .setEphemeral(true)
+                        .queue();
                 return;
             }
 
-            // Ejecutar comando en Minecraft
             Bukkit.getScheduler().runTask(DiscordIncorporation.getInstance(), () -> {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), comando);
+                boolean success = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), comando);
+                String replyMsg = success ? "✅ Command executed: `" + comando + "`" :
+                        "❌ Error executing command: `" + comando + "`";
+                event.reply(replyMsg).queue();
             });
+        }
+    }
 
-            String msg = DiscordIncorporation.getInstance().getMessagesConfig()
-                    .getString("discord.executed", "✅ Ejecutado: %command%")
-                    .replace("%command%", comando);
-
-            event.reply(msg).queue();
+    public static void sendMessageToDiscord(String content) {
+        String logChannelId = DiscordIncorporation.getInstance().getLogChannelId();
+        TextChannel channel = DiscordIncorporation.getInstance().getJda().getTextChannelById(logChannelId);
+        if (channel != null) {
+            channel.sendMessage(content).queue();
         }
     }
 }

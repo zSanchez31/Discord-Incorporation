@@ -1,15 +1,21 @@
-plugin:
-  enabled:
-    - "&9Ha sido activado! &fVersion: %version%"
-    - "&9Gracias por usar mi plugin ;)"
-    - "&9It has been enabled! &fVersion: %version%"
-    - "&9Thank you for using my plugin ;)"
-  disabled:
-    - "&9Ha sido desactivado! &fVersion: %version%"
-    - "&9Gracias por usar mi plugin ;)"
-    - "&9It has been disabled! &fVersion: %version%"
-    - "&9Thank you for using my plugin ;)"
+# Plugin enable/disable messages
+plugin-enabled-es: "&9Ha sido activado! Versión: %version%"
+plugin-enabled-thanks-es: "&9Gracias por usar mi plugin ;)"
+plugin-enabled-en: "&9Plugin has been enabled! Version: %version%"
+plugin-enabled-thanks-en: "&9Thank you for using my plugin ;)"
 
-discord:
-  executed: "✅ Comando ejecutado en Minecraft: &f%command%"
-  no_permission: "❌ No tienes permiso para ejecutar este comando."
+plugin-disabled-es: "&9Ha sido desactivado! Versión: %version%"
+plugin-disabled-thanks-es: "&9Gracias por usar mi plugin ;)"
+plugin-disabled-en: "&9Plugin has been disabled! Version: %version%"
+plugin-disabled-thanks-en: "&9Thank you for using my plugin ;)"
+
+# Config reload messages
+reload-success: "Configuration reloaded successfully."
+reload-usage: "Use: /discordinc reload"
+
+# Chat format
+chat-mc-format: "[MC] %player%: %message%"
+chat-discord-format: "[DISCORD] %user%: %message%"
+
+# Commands
+no-permission: "You do not have permission to execute this command."
